@@ -1,7 +1,7 @@
 import Category from '@/models/category';
 import { FC, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 
 interface FilterFormProps {
 	handleClose?: () => void;
@@ -16,6 +16,7 @@ type Inputs = {
 
 const FilterForm: FC<FilterFormProps> = ({ handleClose, categories }) => {
 	const { register, handleSubmit, getValues, setValue, watch } = useForm<Inputs>({});
+	const router = useRouter();
 
 	const watchedCategories = watch(['category']);
 	useEffect(() => {}, [watchedCategories]);
@@ -30,6 +31,7 @@ const FilterForm: FC<FilterFormProps> = ({ handleClose, categories }) => {
 			query: {
 				...(data.minPrice ? { minPrice: data.minPrice } : {}),
 				...(data.maxPrice ? { maxPrice: data.maxPrice } : {}),
+				...(router.query.sort ? { sort: router.query.sort } : {}),
 			},
 		}).then(() => handleClose && handleClose());
 	};
